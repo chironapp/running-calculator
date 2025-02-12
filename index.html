@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Running Calculator</title>
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <main>
+      <h1>Running Calculator !IN DEVELOPMENT!</h1>
+      <!-- Tab links -->
+      <div class="tab">
+        <button
+          class="tablinks active"
+          onclick="openTab(event, 'Race Predictor')"
+        >
+          Race Predictor
+        </button>
+        <button class="tablinks" onclick="openTab(event, 'Track Calculator')">
+          Track Calculator
+        </button>
+        <button class="tablinks" onclick="openTab(event, 'Critical Speed')">
+          Critical Speed
+        </button>
+      </div>
+      <!-- Tab content -->
+      <div id="Race Predictor" class="tabcontent" style="display: block">
+        <div>
+          <input
+            type="radio"
+            id="criticalSpeedRadio"
+            name="predictorType"
+            value="criticalSpeed"
+            onclick="toggleRacePredictor()"
+          />
+          <label for="criticalSpeedRadio"
+            >Use Critical Speed (calculate from Critical Speed tab)</label
+          ><br />
+          <input
+            type="radio"
+            id="raceResultRadio"
+            name="predictorType"
+            value="raceResult"
+            checked
+            onclick="toggleRacePredictor()"
+          />
+          <label for="raceResultRadio">Use race result</label>
+        </div>
+
+        <div id="raceResultContainer">Enter a recent race result:</div>
+        <form id="raceResultForm">
+          <label for="distance">Distance (km)</label><br />
+          <input type="text" id="distance" name="distance" size="5" /><br />
+          <label for="timeHH">Time (hh:mm:ss)</label><br />
+          <input type="text" id="timeHH" name="timeHH" size="3" />
+          :<input type="text" id="timeMM" name="timeMM" size="3" /> :<input
+            type="text"
+            id="timeSS"
+            name="timeSS"
+            size="3"
+          /><br />
+          <input
+            type="button"
+            id="calcButton"
+            onClick="calculate()"
+            value="Calculate"
+          /><br />
+          <label>
+            These calculations are estimates only based on a single race result.
+            An explanation of how these paces and race times are calculated, as
+            well as the source code can
+            <a href="https://github.com/clivegross/running-calculator"
+              >be found here</a
+            >. For more accurate predictions, use the Critical Speed tab to
+            calculate your Critical Speed and D'.
+          </label>
+        </form>
+
+        <h2>Training Paces</h2>
+        <table>
+          <tr>
+            <th></th>
+            <th>Pace/km</th>
+            <th>Pace/400m</th>
+            <th>Pace/mile</th>
+            <th>Speed m/s</th>
+          </tr>
+          <tr>
+            <td>
+              <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5070974/"
+                >Critical Speed</a
+              >
+            </td>
+            <td id="trainingPace_CS">
+              <span id="CSPaceMin">--</span> - <span id="CSPaceMax"></span>
+            </td>
+            <td id="trainingPace400_CS">
+              <span id="CS400Min">--</span> - <span id="CS400Max"></span>
+            </td>
+            <td id="trainingPaceMile_CS">
+              <span id="CSMileMin">--</span> - <span id="CSMileMax"></span>
+            </td>
+            <td id="trainingSpeed_CS">
+              <span id="CSMax">--</span> - <span id="CSMin"></span>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <table>
+          <tr>
+            <th>Zone</th>
+            <th>Pace/km</th>
+            <th>Pace/400m</th>
+            <th>Pace/mile</th>
+            <th>Speed m/s</th>
+          </tr>
+          <tr>
+            <td>1 Recovery</td>
+            <td id="trainingPace_R">
+              <span id="trainingPaceMin_R">--</span> -
+              <span id="trainingPaceMax_R"></span>
+            </td>
+            <td id="trainingPace400_R">
+              <span id="trainingPace400Min_R">--</span> -
+              <span id="trainingPace400Max_R"></span>
+            </td>
+            <td id="trainingPaceMile_R">
+              <span id="trainingPaceMileMin_R">--</span> -
+              <span id="trainingPaceMileMax_R"></span>
+            </td>
+            <td id="trainingSpeed_R">
+              <span id="trainingSpeedMin_R">--</span> -
+              <span id="trainingSpeedMax_R"></span>
+            </td>
+          </tr>
+          <tr>
+            <td>2 Endurance</td>
+            <td id="trainingPace_E">
+              <span id="trainingPaceMin_E">--</span> -
+              <span id="trainingPaceMax_E"></span>
+            </td>
+            <td id="trainingPace400_E">
+              <span id="trainingPace400Min_E">--</span> -
+              <span id="trainingPace400Max_E"></span>
+            </td>
+            <td id="trainingPaceMile_E">
+              <span id="trainingPaceMileMin_E">--</span> -
+              <span id="trainingPaceMileMax_E"></span>
+            </td>
+            <td id="trainingSpeed_E">
+              <span id="trainingSpeedMin_E">--</span> -
+              <span id="trainingSpeedMax_E"></span>
+            </td>
+          </tr>
+          <tr>
+            <td>3 Tempo</td>
+            <td id="trainingPace_Tempo">
+              <span id="trainingPaceMin_Tempo">--</span> -
+              <span id="trainingPaceMax_Tempo"></span>
+            </td>
+            <td id="trainingPace400_Tempo">
+              <span id="trainingPace400Min_Tempo">--</span> -
+              <span id="trainingPace400Max_Tempo"></span>
+            </td>
+            <td id="trainingPaceMile_Tempo">
+              <span id="trainingPaceMileMin_Tempo">--</span> -
+              <span id="trainingPaceMileMax_Tempo"></span>
+            </td>
+            <td id="trainingSpeed_Tempo">
+              <span id="trainingSpeedMin_Tempo">--</span> -
+              <span id="trainingSpeedMax_Tempo"></span>
+            </td>
+          </tr>
+          <tr>
+            <td>4 Threshold</td>
+            <td id="trainingPace_T">
+              <span id="trainingPaceMin_T">--</span> -
+              <span id="trainingPaceMax_T"></span>
+            </td>
+            <td id="trainingPace400_T">
+              <span id="trainingPace400Min_T">--</span> -
+              <span id="trainingPace400Max_T"></span>
+            </td>
+            <td id="trainingPaceMile_T">
+              <span id="trainingPaceMileMin_T">--</span> -
+              <span id="trainingPaceMileMax_T"></span>
+            </td>
+            <td id="trainingSpeed_T">
+              <span id="trainingSpeedMin_T">--</span> -
+              <span id="trainingSpeedMax_T"></span>
+            </td>
+          </tr>
+          <tr>
+            <td>5 VO2Max</td>
+            <td id="trainingPace_VO2Max">
+              <span id="trainingPaceMin_VO2Max">--</span> -
+              <span id="trainingPaceMax_VO2Max"></span>
+            </td>
+            <td id="trainingPace400_VO2Max">
+              <span id="trainingPace400Min_VO2Max">--</span> -
+              <span id="trainingPace400Max_VO2Max"></span>
+            </td>
+            <td id="trainingPaceMile_VO2Max">
+              <span id="trainingPaceMileMin_VO2Max">--</span> -
+              <span id="trainingPaceMileMax_VO2Max"></span>
+            </td>
+            <td id="trainingSpeed_VO2Max">
+              <span id="trainingSpeedMin_VO2Max">--</span> -
+              <span id="trainingSpeedMax_VO2Max"></span>
+            </td>
+          </tr>
+          <tr>
+            <td>6 Anaerobic Capacity</td>
+            <td id="trainingPace_AnC">
+              <span id="trainingPaceMin_AnC">--</span> -
+              <span id="trainingPaceMax_AnC"></span>
+            </td>
+            <td id="trainingPace400_AnC">
+              <span id="trainingPace400Min_AnC">--</span> -
+              <span id="trainingPace400Max_AnC"></span>
+            </td>
+            <td id="trainingPaceMile_AnC">
+              <span id="trainingPaceMileMin_AnC">--</span> -
+              <span id="trainingPaceMileMax_AnC"></span>
+            </td>
+            <td id="trainingSpeed_AnC">
+              <span id="trainingSpeedMin_AnC">--</span> -
+              <span id="trainingSpeedMax_AnC"></span>
+            </td>
+          </tr>
+        </table>
+        <h2>Race Predictor</h2>
+        <table>
+          <tr>
+            <th>Distance</th>
+            <th>Time</th>
+            <th>Pace/km</th>
+            <th>Pace/400m</th>
+            <th>Pace/mile</th>
+            <th>Speed m/s</th>
+          </tr>
+          <tr>
+            <td>800m</td>
+            <td id="raceTime_800">--</td>
+            <td id="racePace_800">--</td>
+            <td id="racePace400_800">--</td>
+            <td id="racePaceMile_800">--</td>
+            <td id="raceSpeed_800">--</td>
+          </tr>
+          <tr>
+            <td>1000m</td>
+            <td id="raceTime_1000">--</td>
+            <td id="racePace_1000">--</td>
+            <td id="racePace400_1000">--</td>
+            <td id="racePaceMile_1000">--</td>
+            <td id="raceSpeed_1000">--</td>
+          </tr>
+          <tr>
+            <td>1500m</td>
+            <td id="raceTime_1500">--</td>
+            <td id="racePace_1500">--</td>
+            <td id="racePace400_1500">--</td>
+            <td id="racePaceMile_1500">--</td>
+            <td id="raceSpeed_1500">--</td>
+          </tr>
+          <tr>
+            <td>1 Mile</td>
+            <td id="raceTime_Mile">--</td>
+            <td id="racePace_Mile">--</td>
+            <td id="racePace400_Mile">--</td>
+            <td id="racePaceMile_Mile">--</td>
+            <td id="raceSpeed_Mile">--</td>
+          </tr>
+          <tr>
+            <td>3km</td>
+            <td id="raceTime_3K">--</td>
+            <td id="racePace_3K">--</td>
+            <td id="racePace400_3K">--</td>
+            <td id="racePaceMile_3K">--</td>
+            <td id="raceSpeed_3K">--</td>
+          </tr>
+          <tr>
+            <td>5km</td>
+            <td id="raceTime_5K">--</td>
+            <td id="racePace_5K">--</td>
+            <td id="racePace400_5K">--</td>
+            <td id="racePaceMile_5K">--</td>
+            <td id="raceSpeed_5K">--</td>
+          </tr>
+          <tr>
+            <td>10km</td>
+            <td id="raceTime_10K">--</td>
+            <td id="racePace_10K">--</td>
+            <td id="racePace400_10K">--</td>
+            <td id="racePaceMile_10K">--</td>
+            <td id="raceSpeed_10K">--</td>
+          </tr>
+          <tr>
+            <td>Half Marathon</td>
+            <td id="raceTime_HM">--</td>
+            <td id="racePace_HM">--</td>
+            <td id="racePace400_HM">--</td>
+            <td id="racePaceMile_HM">--</td>
+            <td id="raceSpeed_HM">--</td>
+          </tr>
+          <tr>
+            <td>30km</td>
+            <td id="raceTime_30K">--</td>
+            <td id="racePace_30K">--</td>
+            <td id="racePace400_30K">--</td>
+            <td id="racePaceMile_30K">--</td>
+            <td id="raceSpeed_30K">--</td>
+          </tr>
+          <tr>
+            <td>Marathon</td>
+            <td id="raceTime_M">--</td>
+            <td id="racePace_M">--</td>
+            <td id="racePace400_M">--</td>
+            <td id="racePaceMile_M">--</td>
+            <td id="raceSpeed_M">--</td>
+          </tr>
+          <tr>
+            <td>
+              Custom Distance<br />
+              <input
+                type="text"
+                id="customDistance"
+                name="customDistance"
+                size="5"
+              />km<br />
+              <input
+                type="button"
+                id="calcCustomButton"
+                onClick="calculate()"
+                value="Calculate"
+              />
+            </td>
+            <td id="raceTime_Custom">--</td>
+            <td id="racePace_Custom">--</td>
+            <td id="racePace400_Custom">--</td>
+            <td id="racePaceMile_Custom">--</td>
+            <td id="raceSpeed_Custom">--</td>
+          </tr>
+        </table>
+        <br />
+        <div>
+          An explanation of how these paces and race times are calculated, as
+          well as the source code can
+          <a href="https://github.com/clivegross/running-calculator"
+            >be found here</a
+          >.
+        </div>
+      </div>
+      <!-- Track Calculator -->
+      <div id="Track Calculator" class="tabcontent" id="defaultOpen">
+        <div>Enter a target split:</div>
+        <form>
+          <label for="trackDistance">Distance (m)</label><br />
+          <input
+            type="text"
+            id="trackDistance"
+            name="trackDistance"
+            size="5"
+            value="400"
+          /><br />
+          <label for="timeMM">Time (mm:ss)</label><br />
+          <input type="text" id="trackTimeMM" name="trackTimeMM" size="3" />
+          :<input
+            type="text"
+            id="trackTimeSS"
+            name="trackTimeSS"
+            size="3"
+          /><br />
+          <input
+            type="button"
+            id="calcButton"
+            onClick="calculate()"
+            value="Calculate"
+          />
+        </form>
+        <h2>Track Splits</h2>
+        <table>
+          <tr>
+            <th>400m Split</th>
+            <th>
+              <label for="cars">Select a lane:</label>
+              <select name="laneSelect" id="laneSelect">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+            </th>
+            <th>Pace/km</th>
+            <th>Pace/mile</th>
+            <th>Speed m/s</th>
+          </tr>
+          <tr>
+            <td id="track_-3_400">--</td>
+            <td id="track_-3_lane">--</td>
+            <td id="track_-3_1000">--</td>
+            <td id="track_-3_mile">--</td>
+            <td id="track_-3_speed">--</td>
+          </tr>
+          <tr>
+            <td id="track_-2.5_400">--</td>
+            <td id="track_-2.5_lane">--</td>
+            <td id="track_-2.5_1000">--</td>
+            <td id="track_-2.5_mile">--</td>
+            <td id="track_-2.5_speed">--</td>
+          </tr>
+          <tr>
+            <td id="track_-2_400">--</td>
+            <td id="track_-2_lane">--</td>
+            <td id="track_-2_1000">--</td>
+            <td id="track_-2_mile">--</td>
+            <td id="track_-2_speed">--</td>
+          </tr>
+          <tr>
+            <td id="track_-1.5_400">--</td>
+            <td id="track_-1.5_lane">--</td>
+            <td id="track_-1.5_1000">--</td>
+            <td id="track_-1.5_mile">--</td>
+            <td id="track_-1.5_speed">--</td>
+          </tr>
+          <tr>
+            <td id="track_-1_400">--</td>
+            <td id="track_-1_lane">--</td>
+            <td id="track_-1_1000">--</td>
+            <td id="track_-1_mile">--</td>
+            <td id="track_-1_speed">--</td>
+          </tr>
+          <tr>
+            <td id="track_-0.5_400">--</td>
+            <td id="track_-0.5_lane">--</td>
+            <td id="track_-0.5_1000">--</td>
+            <td id="track_-0.5_mile">--</td>
+            <td id="track_-0.5_speed">--</td>
+          </tr>
+          <tr>
+            <td><b id="track_0_400">--</b></td>
+            <td><b id="track_0_lane">--</b></td>
+            <td><b id="track_0_1000">--</b></td>
+            <td><b id="track_0_mile">--</b></td>
+            <td><b id="track_0_speed">--</b></td>
+          </tr>
+          <tr>
+            <td id="track_0.5_400">--</td>
+            <td id="track_0.5_lane">--</td>
+            <td id="track_0.5_1000">--</td>
+            <td id="track_0.5_mile">--</td>
+            <td id="track_0.5_speed">--</td>
+          </tr>
+          <tr>
+            <td id="track_1_400">--</td>
+            <td id="track_1_lane">--</td>
+            <td id="track_1_1000">--</td>
+            <td id="track_1_mile">--</td>
+            <td id="track_1_speed">--</td>
+          </tr>
+          <tr>
+            <td id="track_1.5_400">--</td>
+            <td id="track_1.5_lane">--</td>
+            <td id="track_1.5_1000">--</td>
+            <td id="track_1.5_mile">--</td>
+            <td id="track_1.5_speed">--</td>
+          </tr>
+          <tr>
+            <td id="track_2_400">--</td>
+            <td id="track_2_lane">--</td>
+            <td id="track_2_1000">--</td>
+            <td id="track_2_mile">--</td>
+            <td id="track_2_speed">--</td>
+          </tr>
+          <tr>
+            <td id="track_2.5_400">--</td>
+            <td id="track_2.5_lane">--</td>
+            <td id="track_2.5_1000">--</td>
+            <td id="track_2.5_mile">--</td>
+            <td id="track_2.5_speed">--</td>
+          </tr>
+          <tr>
+            <td id="track_3_400">--</td>
+            <td id="track_3_lane">--</td>
+            <td id="track_3_1000">--</td>
+            <td id="track_3_mile">--</td>
+            <td id="track_3_speed">--</td>
+          </tr>
+        </table>
+        <br />
+        <div>
+          These calculations are based on a IAAF 400m Standard Track with a
+          constant lane width of 1.22m. This equates to an additional 7.67m
+          length per lane.
+        </div>
+      </div>
+      <!-- Critical Speed -->
+      <div id="Critical Speed" class="tabcontent" id="defaultOpen">
+        <form>
+          <label
+            >Enter a recent shorter race or time trial result (eg 800m - 1 mile,
+            2-6 min)</label
+          ><br />
+          <label for="CSdistance1">Distance (km)</label><br />
+          <input
+            type="text"
+            id="CSdistance1"
+            name="CSdistance1"
+            size="5"
+            value="1"
+          /><br />
+          <label for="CStimeHH1">Time (mm:ss)</label><br />
+          <input
+            type="text"
+            id="CStime1MM"
+            name="CStime1MM"
+            size="3"
+            value="2"
+          />
+          :<input
+            type="text"
+            id="CStime1SS"
+            name="CStime1SS"
+            size="3"
+            value="41"
+          /><br />
+          <label
+            >Enter a recent longer race or time trial result (eg 5km, 12-25
+            min)</label
+          ><br />
+          <label for="CSdistance1">Distance (km)</label><br />
+          <input
+            type="text"
+            id="CSdistance2"
+            name="CSdistance2"
+            size="5"
+            value="5"
+          /><br />
+          <label for="CStimeHH2">Time (mm:ss)</label><br />
+          <input
+            type="text"
+            id="CStime2MM"
+            name="CStime2MM"
+            size="3"
+            value="15"
+          />
+          :<input
+            type="text"
+            id="CStime2SS"
+            name="CStime2SS"
+            size="3"
+            value="27"
+          /><br />
+          <input
+            type="button"
+            id="CScalcButton"
+            onClick="calculate()"
+            value="Calculate"
+          /><br />
+        </form>
+        <h2>Critical Speed</h2>
+        <table>
+          <tr>
+            <th></th>
+            <th>Pace/km</th>
+            <th>Pace/400m</th>
+            <th>Pace/mile</th>
+            <th>Speed m/s</th>
+            <th>Speed km/h</th>
+          </tr>
+          <tr>
+            <td>
+              <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5070974/"
+                >Critical Speed</a
+              >
+            </td>
+            <td id="trainingPace_CS"><span id="CSPace">--</span></td>
+            <td id="trainingPace400_CS"><span id="CS400">--</span></td>
+            <td id="trainingPaceMile_CS"><span id="CSMile">--</span></td>
+            <td id="trainingSpeed_CS"><span id="CS">--</span></td>
+            <td id="trainingSpeed_CS"><span id="CSkph">--</span></td>
+          </tr>
+        </table>
+        <br />
+        <h2>D'</h2>
+        <table>
+          <tr>
+            <th>metres</th>
+          </tr>
+          <tr>
+            <td id="Dprime_Dprime"><span id="Dprime">--</span>m</td>
+          </tr>
+        </table>
+        <br />
+        <h2>Speed-Duration Curve</h2>
+        <div>
+          <input
+            type="radio"
+            id="paceChartRadio"
+            name="chartType"
+            value="pace"
+            checked
+            onclick="toggleChart()"
+          />
+          <label for="paceChartRadio">Pace (m/s)</label>
+          <input
+            type="radio"
+            id="speedChartRadio"
+            name="chartType"
+            value="speed"
+            onclick="toggleChart()"
+          />
+          <label for="speedChartRadio">Speed (m/s)</label>
+        </div>
+        <div id="speedChartContainer">
+          <canvas id="speedDurationChart" width="400" height="200"></canvas>
+        </div>
+        <div id="paceChartContainer" style="display: none">
+          <canvas id="paceDurationChart"></canvas>
+        </div>
+      </div>
+    </main>
+    <script src="scripts/calculator.js"></script>
+    <script src="scripts/plot.js"></script>
+    <script src="scripts/tabs.js"></script>
+    <script>
+      function toggleChart() {
+        const speedChartContainer = document.getElementById(
+          "speedChartContainer"
+        );
+        const paceChartContainer =
+          document.getElementById("paceChartContainer");
+        const paceChartRadio = document.getElementById("paceChartRadio");
+        if (paceChartRadio.checked) {
+          speedChartContainer.style.display = "none";
+          paceChartContainer.style.display = "block";
+        } else {
+          speedChartContainer.style.display = "block";
+          paceChartContainer.style.display = "none";
+        }
+      }
+
+      function toggleRacePredictor() {
+        const form = document.getElementById("raceResultForm");
+        const container = document.getElementById("raceResultContainer");
+        const criticalSpeedRadio =
+          document.getElementById("criticalSpeedRadio");
+
+        if (criticalSpeedRadio.checked) {
+          form.style.display = "none";
+          container.style.display = "none";
+        } else {
+          form.style.display = "block";
+          container.style.display = "block";
+        }
+      }
+
+      // Ensure the correct chart is displayed on page load
+      document.addEventListener("DOMContentLoaded", (event) => {
+        toggleChart();
+      });
+    </script>
+  </body>
+</html>
