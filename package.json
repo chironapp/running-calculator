@@ -1,0 +1,15 @@
+{
+  "name": "running-calculator",
+  "version": "1.0.0",
+  "description": "[Click here for Demo.](https://clivegross.github.io/running-calculator/)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.3.3"
+  }
+}
