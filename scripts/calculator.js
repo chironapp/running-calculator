@@ -263,6 +263,22 @@ function calculate() {
     ? criticalSpeed2Point
     : criticalSpeedRaceResult;
 
+  // if using race result and not critical speed, show race pace
+  if (!useCriticalSpeed) {
+    const result = new RacePrediction(
+      resultDistanceInKm,
+      resultTimeInSeconds,
+      resultDistanceInKm
+    );
+    updateElementById("raceDistance", result.distance);
+    updateElementById("raceTime", result.time);
+    updateElementById("racePace", result.pace);
+    updateElementById("racePace400", result.pace400);
+    updateElementById("racePaceMile", result.paceMile);
+    updateElementById("raceSpeed", result.speed.toFixed(1));
+  } else {
+  }
+
   // training zones
   let trainingZones = {};
   trainingZones["R"] = new TrainingZone(
