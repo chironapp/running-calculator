@@ -966,9 +966,43 @@
           <h2>Frequently Asked Questions</h2>
           <div class="accordion" id="faqAccordion">
             <div class="accordion-item">
+              <h2 class="accordion-header" id="headingZero">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseZero"
+                  aria-expanded="false"
+                  aria-controls="collapseZero"
+                >
+                  What is a Running Calculator?
+                </button>
+              </h2>
+              <div
+                id="collapseZero"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingZero"
+                data-bs-parent="#faqAccordion"
+              >
+                <div class="accordion-body">
+                  A running calculator is a tool that estimates training paces
+                  and predicts race times. For example, you can estimate your
+                  expected half marathon time based on your 5km time. The track
+                  calculator provides exact 400m track splits for a given target
+                  time or pace. If you require more precision with your pacing
+                  and training,
+                  <a href="https://www.chironapp.com/">Chiron</a> provides
+                  in-depth performance metrics to help runners and coaches
+                  optimise training.
+                  <a href="https://www.chironapp.com/contact/">Subscribe</a> to
+                  stay informed about the Chiron app release.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
               <h2 class="accordion-header" id="headingOne">
                 <button
-                  class="accordion-button"
+                  class="accordion-button collapsed"
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseOne"
@@ -976,7 +1010,7 @@
                   aria-controls="collapseOne"
                 >
                   How are the Race Predictions and Training Zones calculated
-                  from a race result?
+                  from a single race result?
                 </button>
               </h2>
               <div
@@ -987,8 +1021,9 @@
               >
                 <div class="accordion-body">
                   These calculations are estimates only based on a single race
-                  result. An explanation of how these paces and race times are
-                  calculated, as well as the source code can
+                  result using the Peter Riegel race predictor formula. An
+                  explanation of how these paces and race times are calculated,
+                  its limitations as well as the source code can
                   <a href="https://github.com/chironapp/running-calculator"
                     >be found here</a
                   >. For more accurate predictions, use the Critical Speed tab
@@ -1016,10 +1051,13 @@
                 data-bs-parent="#faqAccordion"
               >
                 <div class="accordion-body">
-                  Critical Speed (CS) is the running speed at the external power
-                  output that could be sustained for ‘a long time without
-                  fatigue’. The D' value is the distance you can run above
-                  Critical Speed before exhaustion. Read more about
+                  Critical Speed (CS) lies somewhere between the Lactate
+                  Threshold and VO2max. It represents the dividing line between
+                  speed that could be sustained for a long time without fatigue
+                  and effort which is so hard, you are forced to stop exercise
+                  much sooner. The D' (or D-prime) tells us how energy can be
+                  expended above Critical Speed before exhaustion. Read more
+                  about
                   <a
                     href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5070974/"
                     target="_blank"
@@ -1049,10 +1087,56 @@
               >
                 <div class="accordion-body">
                   The Speed-Duration Curve shows the hyperbolic relationship
-                  between running speed changes as the duration until
-                  exhaustion. The curve is based on your Critical Speed and D'
-                  values. The curve shows the fastest speed you can maintain for
-                  a given duration.
+                  between running speed and the duration until exhaustion. The
+                  curve is based on your Critical Speed and D' values. The curve
+                  shows the fastest speed you can maintain for a given duration.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingFour">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseFour"
+                  aria-expanded="false"
+                  aria-controls="collapseFour"
+                >
+                  Should I calculate my Critical Speed?
+                </button>
+              </h2>
+              <div
+                id="collapseFour"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingFour"
+                data-bs-parent="#faqAccordion"
+              >
+                <div class="accordion-body">
+                  Critical Speed (CS) is arguably the most important threshold
+                  in long distance running. It is usually approximately the pace
+                  you could sustain for a 30 to 40 minutes time trial on a 0%
+                  grade flat surface or close to 10km pace for most runners. It
+                  is an excellent predictor of performance. Estimating your
+                  Critical Speed off a single race result using the running
+                  calculator will work ok for most people. For more precision in
+                  training and racing, it is recommended to calculate your
+                  Critical Speed and D' values, which can be done by entering 2
+                  recent time trial results into the calculator:
+                  <ol>
+                    <li>
+                      A shorter duration, 2-6 minute time trial result (eg 800m
+                      - 1 mile)
+                    </li>
+                    <li>
+                      A longer duration, 12-25 minute time trial result (eg 5km)
+                    </li>
+                  </ol>
+                  <a href="https://www.chironapp.com/">Chiron</a> automatically
+                  calculates and updates your Critical Speed and D' values as
+                  well as your training zones from your training history.
+                  <a href="https://www.chironapp.com/contact/">Subscribe</a> to
+                  stay informed about the Chiron app release.
                 </div>
               </div>
             </div>
@@ -1069,9 +1153,9 @@
               Chiron is the ultimate endurance training platform for long
               distance runners and coaches. Currently in development and
               scheduled for release in 2025.
-              <a href="https://www.chironapp.com/contact/">Subscribe</a> to
-              access more resources like this and to stay up to date with
-              Chiron's release.
+              <a href="https://www.chironapp.com/contact/">Subscribe</a> to stay
+              informed about the Chiron app release and receive tips, resources
+              and stories to help you with your running journey.
             </p>
           </div>
           <div class="col-md-6 text-md-end">
@@ -1081,7 +1165,7 @@
                 <a
                   href="https://github.com/chironapp/running-calculator"
                   target="_blank"
-                  >GitHub Repository</a
+                  >Source Code (GitHub)</a
                 >
               </li>
               <li>
@@ -1110,10 +1194,13 @@
             >. All rights reserved.
           </p>
           <p>
-            This project is licensed under the
-            <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank"
-              >GNU General Public License v3.0</a
-            >.
+            This running calculator is licensed under the
+            <a href="https://opensource.org/licenses/MIT" target="_blank"
+              >MIT License</a
+            >. You are free to use, modify, and distribute this software,
+            provided that you include the original copyright notice and this
+            permission notice in all copies or substantial portions of the
+            software.
           </p>
         </div>
       </div>
